@@ -28,7 +28,7 @@ describe('routes : auth', () => {
     it('should render the login view', async () => {
       const response = await request.get('/auth/login')
       expect(response.status).toBe(200)
-      expect(response.redirects.length).toBe(0)
+      expect(response.redirect).toBeFalsy()
       expect(response.type).toBe('text/html')
       expect(response.text).toContain('<h1>Login</h1>')
       expect(response.text).toContain('<p><button type="submit">Log In</button></p>')

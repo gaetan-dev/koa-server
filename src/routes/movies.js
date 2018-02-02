@@ -8,114 +8,53 @@ router.get(BASE_URL, async (ctx) => {
   try {
     const movies = await queries.getAllMovies()
     ctx.body = {
-      status: 'success',
-      data: movies
+      movies: movies
     }
   } catch (err) {
-    ctx.status = 500
-    ctx.body = {
-      status: 'error',
-      message: err.message || 'Sorry, an error has occurred.'
-    }
+    ctx.throw(err.message, 500)
   }
 })
 
 router.get(`${BASE_URL}/:id`, async (ctx) => {
-  try {
-    const movie = await queries.getSingleMovie(ctx.params.id)
-    if (movie.length) {
-      ctx.body = {
-        status: 'success',
-        data: movie[0]
-      }
-    } else {
-      ctx.status = 404
-      ctx.body = {
-        status: 'error',
-        'message': 'That movie does not exist.'
-      }
-    }
-  } catch (err) {
-    ctx.status = 500
+  const movie = await queries.getSingleMovie(ctx.params.id)
+  if (movie.length) {
     ctx.body = {
-      status: 'error',
-      message: err.message || 'Sorry, an error has occurred.'
+      movie: movie[0]
     }
+  } else {
+    ctx.throw(404, 'That movie does not exist.')
   }
 })
 
 router.post(`${BASE_URL}`, async (ctx) => {
-  try {
-    const movie = await queries.addMovie(ctx.request.body)
-    if (movie.length) {
-      ctx.status = 201
-      ctx.body = {
-        status: 'success',
-        data: movie[0]
-      }
-    } else {
-      ctx.status = 400
-      ctx.body = {
-        status: 'error',
-        message: 'Something went wrong.'
-      }
-    }
-  } catch (err) {
-    ctx.status = 500
+  const movie = await queries.addMovie(ctx.request.body)
+  if (movie.length) {
+    ctx.status = 201
     ctx.body = {
-      status: 'error',
-      message: err.message || 'Sorry, an error has occurred.'
+      id: movie[0]
     }
+  } else {
+    ctx.throw(400)
   }
 })
 
 router.put(`${BASE_URL}/:id`, async (ctx) => {
-  try {
-    const movie = await queries.updateMovie(ctx.params.id, ctx.request.body)
-    if (movie) {
-      ctx.status = 200
-      ctx.body = {
-        status: 'success',
-        data: movie
-      }
-    } else {
-      ctx.status = 404
-      ctx.body = {
-        status: 'error',
-        message: 'That movie does not exist.'
-      }
-    }
-  } catch (err) {
-    ctx.status = 500
-    ctx.body = {
-      status: 'error',
-      message: err.message || 'Sorry, an error has occurred.'
-    }
+  const movie = await queries.updateMovie(ctx.params.id, ctx.request.body)
+  if (movie) {
+    ctx.status = 200
+    ctx.body = { }
+  } else {
+    ctx.throw(404, 'That movie does not exist.')
   }
 })
 
 router.delete(`${BASE_URL}/:id`, async (ctx) => {
-  try {
-    const movie = await queries.deleteMovie(ctx.params.id)
-    if (movie) {
-      ctx.status = 200
-      ctx.body = {
-        status: 'success',
-        data: movie
-      }
-    } else {
-      ctx.status = 404
-      ctx.body = {
-        status: 'error',
-        message: 'That movie does not exist.'
-      }
-    }
-  } catch (err) {
-    ctx.status = 500
-    ctx.body = {
-      status: 'error',
-      message: err.message || 'Sorry, an error has occurred.'
-    }
+  const movie = await queries.deleteMovie(ctx.params.id)
+  if (movie) {
+    ctx.status = 200
+    ctx.body = { }
+  } else {
+    ctx.throw(404, 'That movie does not exist.')
   }
 })
 

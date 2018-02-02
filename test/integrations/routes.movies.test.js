@@ -18,9 +18,8 @@ describe('routes : movies', () => {
       const response = await request.get('/api/v1/movies')
       expect(response.status).toBe(200)
       expect(response.type).toBe('application/json')
-      expect(response.body.status).toBe('success')
-      expect(response.body.data.length).toBe(3)
-      expect(Object.keys(response.body.data[0])).toEqual(
+      expect(response.body.movies.length).toBe(3)
+      expect(Object.keys(response.body.movies[0])).toEqual(
         expect.arrayContaining(['id', 'name', 'genre', 'rating', 'explicit'])
       )
     })
@@ -31,18 +30,16 @@ describe('routes : movies', () => {
       const response = await request.get('/api/v1/movies/1')
       expect(response.status).toBe(200)
       expect(response.type).toBe('application/json')
-      expect(response.body.status).toBe('success')
-      expect(Object.keys(response.body.data)).toEqual(
+      expect(Object.keys(response.body.movie)).toEqual(
         expect.arrayContaining(['id', 'name', 'genre', 'rating', 'explicit'])
       )
-      expect(response.body.data.id).toEqual(1)
+      expect(response.body.movie.id).toEqual(1)
     })
     it('should throw an error if the movie does not exist', async () => {
       const response = await request.get('/api/v1/movies/-1')
       expect(response.status).toBe(404)
       expect(response.type).toBe('application/json')
-      expect(response.body.status).toBe('error')
-      expect(response.body.message).toBe('That movie does not exist.')
+      expect(response.body.error).toBe('That movie does not exist.')
     })
   })
 
@@ -57,8 +54,7 @@ describe('routes : movies', () => {
       })
       expect(response.status).toBe(201)
       expect(response.type).toBe('application/json')
-      expect(response.body.status).toBe('success')
-      expect(response.body.data).toBe(4)
+      expect(response.body.id).toBe(4)
     })
     it('should throw an error if the payload is malformed', async () => {
       const response = await request.post('/api/v1/movies')
@@ -67,8 +63,7 @@ describe('routes : movies', () => {
         })
       expect(response.status).toBe(500)
       expect(response.type).toBe('application/json')
-      expect(response.body.status).toBe('error')
-      expect(Boolean(response.body.message)).toBe(true)
+      expect(Boolean(response.body.error)).toBe(true)
     })
   })
 
@@ -80,8 +75,6 @@ describe('routes : movies', () => {
       })
       expect(response.status).toBe(200)
       expect(response.type).toBe('application/json')
-      expect(response.body.status).toBe('success')
-      expect(response.body.data).toBe(1)
     })
     it('should throw an error if the movie does not exist', async () => {
       const response = await request.put('/api/v1/movies/-1')
@@ -90,8 +83,7 @@ describe('routes : movies', () => {
       })
       expect(response.status).toBe(404)
       expect(response.type).toBe('application/json')
-      expect(response.body.status).toBe('error')
-      expect(response.body.message).toBe('That movie does not exist.')
+      expect(response.body.error).toBe('That movie does not exist.')
     })
   })
   describe('DELETE /api/v1/movies/:id', () => {
@@ -99,15 +91,12 @@ describe('routes : movies', () => {
       const response = await request.delete('/api/v1/movies/1')
       expect(response.status).toBe(200)
       expect(response.type).toBe('application/json')
-      expect(response.body.status).toBe('success')
-      expect(response.body.data).toBe(1)
     })
     it('should throw an error if the movie does not exist', async () => {
       const response = await request.delete('/api/v1/movies/-1')
       expect(response.status).toBe(404)
       expect(response.type).toBe('application/json')
-      expect(response.body.status).toBe('error')
-      expect(response.body.message).toBe('That movie does not exist.')
+      expect(response.body.error).toBe('That movie does not exist.')
     })
   })
 })

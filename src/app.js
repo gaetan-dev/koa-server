@@ -28,6 +28,19 @@ app.use(session(app))
 app.use(passport.initialize())
 app.use(passport.session())
 
+// Error Handling
+app.use(async (ctx, next) => {
+  try {
+    await next()
+  } catch (err) {
+    // will only respond with JSON
+    ctx.status = err.statusCode || err.status || 500
+    ctx.body = {
+      error: err.message || 'Internal error.'
+    }
+  }
+})
+
 // Add routes
 app.use(indexRoutes.routes())
 app.use(authRoutes.routes())

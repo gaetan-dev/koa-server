@@ -33,7 +33,6 @@ router.get('/auth/logout', async (ctx) => {
     ctx.logout()
     ctx.redirect('/auth/login')
   } else {
-    ctx.body = { success: false }
     ctx.throw(401)
   }
 })
@@ -45,8 +44,7 @@ router.post('/auth/register', async (ctx) => {
       ctx.login(user)
       ctx.redirect('/auth/status')
     } else {
-      ctx.status = 400
-      ctx.body = { status: 'error' }
+      ctx.throw(400)
     }
   })(ctx)
 })
@@ -57,10 +55,9 @@ router.post('/auth/login', async (ctx) => {
       ctx.login(user)
       ctx.redirect('/auth/status')
     } else {
-      ctx.status = 400
-      ctx.body = { status: 'error' }
+      ctx.throw(400)
     }
   })(ctx)
 })
 
-module.exports = router
+export default router

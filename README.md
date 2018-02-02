@@ -307,3 +307,25 @@ exports.seed = (knex, Promise) => {
 Now, instead of adding a plain text password to the database, we salt and hash it first.
 
 Drop and recreate the **koa** database, apply the migrations, and then run the server and manually test everything out.
+
+## Error Handling
+Create a new middleware in *src/app.js* :
+
+```js
+app.use(async (ctx, next) => {
+  try {
+    await next()
+  } catch (err) {
+    ctx.status = err.statusCode || err.status || 500
+    ctx.body = {
+      error: err.message || 'Internal error.'
+    }
+  }
+})
+```
+
+Throw error:
+
+```js
+ctx.throw(404, 'That movie does not exist.')
+```
